@@ -1,0 +1,101 @@
+﻿@model ProductBrowseViewModel
+
+<!-- results info -->
+<p id="results-info">
+    Showing @Model.Products.Count of @Model.TotalProducts products
+    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+    {
+        <text> matching "@Model.SearchTerm"</text>
+    }
+    @if (Model.CategoryId.HasValue && Model.CategoryId.Value > 0)
+    {
+        var selectedCategory = Model.Categories?.FirstOrDefault(c => c.Value == Model.CategoryId.ToString());
+        if (selectedCategory != null)
+        {
+            <text> in category "@selectedCategory.Text"</text>
+        }
+    }
+    @if (Model.CountryId.HasValue && Model.CountryId.Value > 0)
+    {
+        var selectedCountry = Model.Countries?.FirstOrDefault(c => c.Value == Model.CountryId.ToString());
+        if (selectedCountry != null)
+        {
+            <text> from country "@selectedCountry.Text"</text>
+        }
+    }
+</p>
+
+<!--produtc grid -->
+@if (Model.Products == null || Model.Products.Count == 0)
+{
+    <p>No products found.</p>
+}
+else
+{
+    <div class="product-grid">
+        @foreach (var product in Model.Products)
+        {
+            <div class="product-card">
+                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                {
+                    <img src="@product.ImageUrl" alt="@product.Title" class="product-image" />
+                }
+                else
+                {
+                    <div class="product-image-placeholder">No Image</div>
+                }
+
+                <h3>@product.Title</h3>
+                <p class="product-category">@product.CategoryName</p>
+                <p class="product-price">€@product.Price.ToString("F2")</p>
+
+                <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-small">View Details</a>
+            </div>
+        }
+    </div>
+}
+
+<!-- ajax pagination -->
+@if (Model.TotalPages > 1)
+{
+    <div class="pagination" id="pagination-container">
+        @{
+            int startPage = Math.Max(1, Model.CurrentPage - 2);
+            int endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+
+            // adjust if near beginning
+            if (Model.CurrentPage <= 3)
+            {
+                endPage = Math.Min(5, Model.TotalPages);
+            }
+
+            // adjust if near end
+            if (Model.CurrentPage >= Model.TotalPages - 2)
+            {
+                startPage = Math.Max(1, Model.TotalPages - 4);
+            }
+        }
+
+        @if (Model.CurrentPage > 1)
+        {
+            <button class="btn btn-small pagination-btn" data-page="@(Model.CurrentPage - 1)">Previous</button>
+        }
+
+        @for (int i = startPage; i <= endPage; i++)
+        {
+            if (i == Model.CurrentPage)
+            {
+                <button class="btn btn-small pagination-btn active" disabled>@i</button>
+            }
+            else
+            {
+                <button class="btn btn-small pagination-btn" data-page="@i">@i</button>
+            }
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <button class="btn btn-small pagination-btn" data-page="@(Model.CurrentPage + 1)">Next</button>
+        }
+    </div>
+}

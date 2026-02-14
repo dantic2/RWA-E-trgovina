@@ -1,0 +1,85 @@
+﻿@model CountryAdminIndexViewModel
+@{
+    ViewData["Title"] = "Countries";
+}
+
+<h1>Countries</h1>
+
+<p>
+    <a asp-action="Create" class="btn">Create New Country</a>
+</p>
+
+<form method="get" asp-action="Index" class="search-form">
+    <input type="text" name="searchTerm" value="@Model.SearchTerm" placeholder="Search by name or code..." />
+
+    <button type="submit" class="btn">Search</button>
+
+    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+    {
+        <a asp-action="Index" class="btn">Clear Search</a>
+    }
+</form>
+
+<!-- results  -->
+<p>
+    Showing @Model.Countries.Count of @Model.TotalCountries countries
+    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+    {
+        <text> matching "@Model.SearchTerm"</text>
+    }
+</p>
+
+<!-- countries tablee -->
+@if (Model.Countries == null || Model.Countries.Count == 0)
+{
+    <p>No countries found.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Countries[0].Name)</th>
+                <th>@Html.DisplayNameFor(model => model.Countries[0].Code)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var country in Model.Countries)
+            {
+                <tr>
+                    <td>@country.Name</td>
+                    <td>@country.Code</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@country.Id" class="btn btn-small">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@country.Id" class="btn btn-small">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<!-- pagination -->
+@if (Model.TotalPages > 1)
+{
+    <div class="pagination">
+        @if (Model.CurrentPage > 1)
+        {
+            <a asp-action="Index"
+               asp-route-searchTerm="@Model.SearchTerm"
+               asp-route-page="@(Model.CurrentPage - 1)"
+               class="btn btn-small">Previous</a>
+        }
+
+        <span>Page @Model.CurrentPage of @Model.TotalPages</span>
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <a asp-action="Index"
+               asp-route-searchTerm="@Model.SearchTerm"
+               asp-route-page="@(Model.CurrentPage + 1)"
+               class="btn btn-small">Next</a>
+        }
+    </div>
+}

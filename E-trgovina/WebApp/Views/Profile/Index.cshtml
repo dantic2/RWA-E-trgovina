@@ -1,0 +1,138 @@
+﻿@* TODO: koristiti koristi asp-action nacin *@
+
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h1>My Profile</h1>
+
+<div class="profile-container">
+    <div class="profile-info">
+        <p><strong>Username:</strong> @Model.Username</p>
+        <p><strong>Role:</strong> @(Model.IsAdmin ? "Administrator" : "User")</p>
+        <p><strong>Member Since:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy")</p>
+    </div>
+
+    <div id="message-container"></div>
+
+    <form id="profile-form" class="profile-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" id="userId" value="@Model.Id" />
+
+        <div class="form-group">
+            <label for="email">@Html.DisplayNameFor(m => m.Email)</label>
+            <input type="email" id="email" name="email" value="@Model.Email" class="form-control" required />
+            <span class="field-error" id="email-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="firstName">@Html.DisplayNameFor(m => m.FirstName)</label>
+            <input type="text" id="firstName" name="firstName" value="@Model.FirstName" class="form-control" required />
+            <span class="field-error" id="firstName-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">@Html.DisplayNameFor(m => m.LastName)</label>
+            <input type="text" id="lastName" name="lastName" value="@Model.LastName" class="form-control" required />
+            <span class="field-error" id="lastName-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="address">@Html.DisplayNameFor(m => m.Address)</label>
+            <textarea id="address" name="address" class="form-control" rows="3">@Model.Address</textarea>
+            <span class="field-error" id="address-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">@Html.DisplayNameFor(m => m.Phone)</label>
+            <input type="tel" id="phone" name="phone" value="@Model.Phone" class="form-control" />
+            <span class="field-error" id="phone-error"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="save-btn">
+                <span id="btn-text">Save Changes</span>
+                <span id="btn-spinner" class="spinner" style="display: none;">Saving...</span>
+            </button>
+        </div>
+    </form>
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+        <h3>Security</h3>
+        <p>
+            <a asp-action="ChangePassword" class="btn">Change Password</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('profile-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
+            document.getElementById('message-container').innerHTML = '';
+
+            // Show loading state
+            document.getElementById('btn-text').style.display = 'none';
+            document.getElementById('btn-spinner').style.display = 'inline';
+            document.getElementById('save-btn').disabled = true;
+
+            // Get form data
+            const data = {
+                id: parseInt(document.getElementById('userId').value),
+                username: '@Model.Username',
+                email: document.getElementById('email').value,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                address: document.getElementById('address').value || null,
+                phone: document.getElementById('phone').value || null,
+                isAdmin: @Model.IsAdmin.ToString().ToLower(),
+                createdAt: '@Model.CreatedAt.ToString("o")'
+            };
+
+            try {
+                const response = await fetch('@Url.Action("Update", "Profile")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    document.getElementById('message-container').innerHTML =
+                        '<div class="message success-message">' + result.message + '</div>';
+
+                } else {
+                    // Show error message
+                    document.getElementById('message-container').innerHTML =
+                        '<div class="message error-message">' + result.message + '</div>';
+
+                    // Show field-specific errors
+                    if (result.errors) {
+                        result.errors.forEach(error => {
+                            // Simple error display (you can improve this)
+                            console.error(error);
+                        });
+                    }
+                }
+            } catch (error) {
+                document.getElementById('message-container').innerHTML =
+                    '<div class="message error-message">An error occurred. Please try again.</div>';
+                console.error('Error:', error);
+            } finally {
+                // Reset button state
+                document.getElementById('btn-text').style.display = 'inline';
+                document.getElementById('btn-spinner').style.display = 'none';
+                document.getElementById('save-btn').disabled = false;
+            }
+        });
+    </script>
+}

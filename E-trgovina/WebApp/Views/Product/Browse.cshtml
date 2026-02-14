@@ -1,0 +1,120 @@
+﻿@model ProductBrowseViewModel
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<h1>Shop</h1>
+
+<form method="get" id="filter-form" class="search-form">
+    <input type="text" id="searchTerm" name="searchTerm" value="@Model.SearchTerm" placeholder="Search products..." />
+
+    <select id="categoryId" name="categoryId" asp-items="Model.Categories">
+        <option value="">All Categories</option>
+    </select>
+
+    <select id="countryId" name="countryId" asp-items="Model.Countries">
+        <option value="">All Countries</option>
+    </select>
+
+
+    <button type="submit" class="btn">Search</button>
+
+    @* @if (!string.IsNullOrEmpty(Model.SearchTerm) || (Model.CategoryId.HasValue && Model.CategoryId.Value > 0))
+    {
+        <button type="button" id="clear-filters-btn" class="btn">Clear Filters</button>
+    } *@
+
+    <button type="button" id="clear-filters-btn" class="btn">Clear Filters</button>
+</form>
+
+<!-- ajax will load -->
+<div id="product-container">
+    @await Html.PartialAsync("_ProductGrid", Model)
+</div>
+
+<div id="loading-spinner" style="display: none; text-align: center; padding: 50px;">
+    <p>Loading... </p>
+</div>
+
+@section Scripts {
+    <script>
+        // store current filter values
+        let currentSearchTerm = '@Model.SearchTerm';
+        let currentCategoryId = '@Model.CategoryId';
+        let currentCountryId = '@Model.CountryId';
+
+        // ajax pagination
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('pagination-btn') && ! e.target.disabled) {
+                e.preventDefault();
+                const page = e.target.getAttribute('data-page');
+                loadProducts(page);
+            }
+        });
+
+        // handle filter
+        document.getElementById('filter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            currentSearchTerm = document.getElementById('searchTerm').value;
+            currentCategoryId = document.getElementById('categoryId').value;
+            currentCountryId = document.getElementById('countryId').value;
+            loadProducts(1);  // to page 1
+        });
+
+        // clear filters
+        const clearFiltersBtn = document.getElementById('clear-filters-btn');
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', function() {
+                document.getElementById('searchTerm').value = '';
+                document.getElementById('categoryId').value = '';
+                document.getElementById('countryId').value = '';
+                currentSearchTerm = '';
+                currentCategoryId = '';
+                loadProducts(1);
+            });
+        }
+
+        // ajax load products
+        async function loadProducts(page) {
+            // spinner
+            document.getElementById('product-container').style.opacity = '0.5';
+            document.getElementById('loading-spinner').style.display = 'block';
+
+            // url building
+            const params = new URLSearchParams();
+            if (currentSearchTerm) params.append('searchTerm', currentSearchTerm);
+            if (currentCategoryId) params.append('categoryId', currentCategoryId);
+            if (currentCountryId) params.append('countryId', currentCountryId);
+            params.append('page', page);
+
+            const url = '@Url.Action("BrowsePartial", "Product")?' + params.toString();
+
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const html = await response.text();
+
+                // update product container
+                document.getElementById('product-container').innerHTML = html;
+                document.getElementById('product-container').style.opacity = '1';
+
+
+            } catch (error) {
+                console.error('Error loading products:', error);
+                alert('Error loading products. Please try again.');
+            } finally {
+                // hide spinner
+                document.getElementById('loading-spinner').style.display = 'none';
+            }
+        }
+
+        // browser back/forward handling
+        window.addEventListener('popstate', function(e) {
+            location.reload();  
+        });
+    </script>
+}

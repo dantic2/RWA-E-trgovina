@@ -1,0 +1,79 @@
+﻿@model OrderViewModel
+@{
+    ViewData["Title"] = $"Order {Model.OrderNumber}";
+}
+
+<h1>Order Details - @Model.OrderNumber</h1>
+
+<div class="order-details-container">
+    <div class="order-info-section">
+        <h2>Order Information</h2>
+        <dl>
+            <dt>@Html.DisplayNameFor(model => model.OrderNumber)</dt>
+            <dd>@Model.OrderNumber</dd>
+
+            <dt>@Html.DisplayNameFor(model => model.OrderDate)</dt>
+            <dd>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            @if (!string.IsNullOrEmpty(Model.ShippingAddress))
+            {
+                <dt>@Html.DisplayNameFor(model => model.ShippingAddress)</dt>
+                <dd>@Model.ShippingAddress</dd>
+            }
+
+
+            <dt>@Html.DisplayNameFor(model => model.Status)</dt>
+            <dd>
+                <span class="status-badge status-@Model.Status.ToLower()">
+                    @Model.Status
+                </span>
+            </dd>
+
+            <dt>@Html.DisplayNameFor(model => model.TotalAmount)</dt>
+            <dd>€@Model.TotalAmount.ToString("F2")</dd>
+        </dl>
+    </div>
+
+    <div class="order-items-section">
+        <h2>Order Items (@Model.TotalItems items)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td>
+                            <div class="order-item-product">
+                                @if (!string.IsNullOrEmpty(item.ProductImageUrl))
+                                {
+                                    <img src="@item.ProductImageUrl" alt="@item.ProductTitle" class="order-item-image" />
+                                }
+                                <span>@item.ProductTitle</span>
+                            </div>
+                        </td>
+                        <td>@item.Quantity</td>
+                        <td>€@item.Price.ToString("F2")</td>
+                        <td>€@item.Subtotal.ToString("F2")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Total:</strong></td>
+                    <td><strong>€@Model.TotalAmount.ToString("F2")</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<p style="margin-top: 30px;">
+    <a asp-action="MyOrders" class="btn">Back to My Orders</a>
+</p>

@@ -1,0 +1,42 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<div class="order-confirmation">
+    <h1>Order Confirmed!</h1>
+
+    <div class="order-summary">
+        <p><strong>Order Number:</strong> #@Model.Id</p>
+        <p><strong>Order Date:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Status:</strong> @Model.Status</p>
+        <p><strong>Total Amount:</strong> €@Model.TotalAmount.ToString("F2")</p>
+    </div>
+
+    <h2>Order Items</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Title</td>
+                    <td>@item.Quantity</td>
+                    <td>€@item.PriceAtOrder.ToString("F2")</td>
+                    <td>€@((item.PriceAtOrder * item.Quantity).ToString("F2"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p style="margin-top: 30px;">
+        <a asp-controller="Product" asp-action="Browse" class="btn">Continue Shopping</a>
+    </p>
+</div>

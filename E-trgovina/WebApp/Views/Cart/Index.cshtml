@@ -1,0 +1,85 @@
+﻿@model CartViewModel
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<h1>Shopping Cart</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="message success-message">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="message error-message">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (Model.Items.Count == 0)
+{
+    <p>Your cart is empty.</p>
+    <p><a asp-controller="Product" asp-action="Browse" class="btn">Continue Shopping</a></p>
+}
+else
+{
+    <table class="cart-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        <div class="cart-product">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Title" class="cart-product-image" />
+                            }
+                            <span>@item.Title</span>
+                        </div>
+                    </td>
+                    <td>€@item.Price.ToString("F2")</td>
+                    <td>
+                        <form asp-action="UpdateQuantity" method="post" class="quantity-form">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" max="99" />
+                            <button type="submit" class="btn btn-small">Update</button>
+                        </form>
+                    </td>
+                    <td>€@item.Subtotal.ToString("F2")</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post" style="display:inline;">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button type="submit" class="btn btn-small btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3"><strong>Total (@Model.TotalItems items):</strong></td>
+                <td colspan="2"><strong>€@Model.Total.ToString("F2")</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="cart-actions">
+        <a asp-controller="Product" asp-action="Browse" class="btn">Continue Shopping</a>
+
+        <form asp-action="Checkout" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+        </form>
+    </div>
+}

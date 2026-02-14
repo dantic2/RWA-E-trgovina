@@ -1,0 +1,78 @@
+﻿@model ProductCatalogViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="product-details">
+    <div class="product-details-image">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="@Model.Title" />
+        }
+        else
+        {
+            <div class="product-image-placeholder-large">No Image Available</div>
+        }
+    </div>
+
+    <div class="product-details-info">
+        <h1>@Model.Title</h1>
+
+        <p class="product-price-large">€@Model.Price.ToString("F2")</p>
+
+        <p><strong>Category:</strong> @Model.CategoryName</p>
+
+        @if (Model.AvailableCountries != null && Model.AvailableCountries.Any())
+        {
+            <p>
+                <strong>Available in:</strong>
+                @string.Join(", ", Model.AvailableCountries)
+            </p>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="product-description">
+                <h3>Description</h3>
+                <p>@Model.Description</p>
+            </div>
+        }
+
+        <p><strong>Stock:</strong> @Model.Stock</p>
+
+        <div class="product-actions">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                if (Model.Stock > 0 && Model.AvailableCountries != null && Model.AvailableCountries.Any())
+                {
+                    <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <label>
+                            Quantity:
+                            <input type="number" name="quantity" value="1" min="1" max="@Model.Stock" />
+                        </label>
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    </form>
+                }
+                else if (Model.Stock == 0)
+                {
+                    <p class="out-of-stock-message"><strong>Currently not in stock</strong></p>   
+                }
+                else if (Model.AvailableCountries == null || !Model.AvailableCountries.Any())
+                {
+                    <p class="unavailable-country-message"><strong>Not available in any country</strong></p>
+                }
+                else
+                {
+                    <p class="login-prompt">
+                        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Login to Add to Cart</a>
+                    </p>
+                }
+            }
+        </div>
+
+        <p>
+            <a asp-action="Browse">Back to Shop</a>
+        </p>
+    </div>
+</div>

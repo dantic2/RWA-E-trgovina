@@ -1,0 +1,31 @@
+﻿@model CountryViewModel
+@{
+    ViewData["Title"] = "Delete Country";
+}
+
+<h1>Delete Country</h1>
+
+<h3>Are you sure you want to delete this country?</h3>
+
+<div>
+    <dl>
+        <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+        <dd>@Model.Name</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Code)</dt>
+        <dd>@Model.Code</dd>
+    </dl>
+
+    @if (ViewData.ModelState.ErrorCount > 0)
+    {
+        <div class="message error-message">
+            @Html.ValidationSummary(false)
+        </div>
+    }
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn">Delete</button>
+        <a asp-action="Index" class="btn">Cancel</a>
+    </form>
+</div>

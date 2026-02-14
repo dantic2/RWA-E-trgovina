@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Logs - RWA eCommerce</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="logs-container">
+        <div class="logs-header">
+            <div>
+                <h2>Log list</h2>
+                <span id="user-info"></span>
+            </div>
+            <button id="logout-btn" class="btn-small">Logout</button>
+        </div>
+
+        <div class="logs-box">
+            <div id="error-message" class="message error-message" style="display:  none;"></div>
+
+            <div class="logs-controls">
+                <select id="log-count">
+                    <option value="10">10</option>
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                </select>
+
+                <button id="refresh-btn" class="btn-small">Show Logs</button>
+            </div>
+
+            <div id="loading" style="display: none; text-align: center; padding: 20px;">
+                Loading...
+            </div>
+
+            <div id="logs-container">
+                <!-- logovi ovdje -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/logs.js"></script>
+</body>
+</html>

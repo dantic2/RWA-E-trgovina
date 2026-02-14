@@ -1,0 +1,44 @@
+﻿@model ProductViewModel
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<h1>Delete Product</h1>
+
+<h3>Are you sure you want to delete this product?</h3>
+
+<div>
+    <dl>
+        <dt>@Html.DisplayNameFor(model => model.Title)</dt>
+        <dd>@Model.Title</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Price)</dt>
+        <dd>€@Model.Price.ToString("F2")</dd>
+
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <dt>Image</dt>
+            <dd><img src="@Model.ImageUrl" alt="@Model.Title" style="max-width: 200px;" /></dd>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+            <dd>@Model.Description</dd>
+        }
+
+        @if (ViewData.ModelState.ErrorCount > 0)
+        {
+            <div class="message error-message">
+                @Html.ValidationSummary(false)
+            </div>
+        }
+
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn">Delete</button>
+        <a asp-action="Index" class="btn">Cancel</a>
+    </form>
+</div>

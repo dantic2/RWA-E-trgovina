@@ -1,0 +1,51 @@
+﻿<! DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RWA eCommerce</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav>
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <a asp-controller="Product" asp-action="Browse">Shop</a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Product" asp-action="Index">Edit Products</a>
+                    <a asp-controller="Category" asp-action="Index">Edit Categories</a>
+                    <a asp-controller="Country" asp-action="Index">Edit Countries</a>
+                    <a asp-controller="Order" asp-action="Index">Orders</a>
+                }
+                else
+                {
+                    <a asp-controller="Cart" asp-action="Index" class="nav-cart">🛒 Cart</a>
+                    <a asp-controller="Order" asp-action="MyOrders">My Orders</a>
+                }
+
+                <a asp-controller="Profile" asp-action="Index">Profile</a>
+
+                <span>@User.Identity.Name</span>
+                <a asp-controller="Auth" asp-action="Logout">Logout</a>
+            }
+            else
+            {
+                <a asp-controller="Auth" asp-action="Login">Login</a>
+            }
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+        <p>&copy; 2026 RWA eCommerce - Domagoj Antić</p>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

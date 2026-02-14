@@ -1,0 +1,322 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/*login*/
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-box {
+    background: white;
+    padding: 40px;
+    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 400px;
+}
+
+    .login-box h2 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+/*form*/
+.form-group {
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+/*buttons*/
+.btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+    .btn:hover {
+        background-color: #555;
+    }
+
+/*messafes */
+.message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid;
+}
+
+.error-message {
+    background-color: #fee;
+    color: #c00;
+    border-color: #fcc;
+}
+
+.success-message {
+    background-color: #efe;
+    color: #0c0;
+    border-color: #cfc;
+}
+
+/*home page*/ 
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.home-box {
+    background: white;
+    padding: 40px;
+    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+    .home-box h1 {
+        margin-bottom: 10px;
+        font-size: 32px;
+    }
+
+    .home-box p {
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+.home-links {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+    .home-links .btn {
+        width: auto;
+        padding: 10px 20px;
+    }
+
+.btn-secondary {
+    background-color: #666;
+}
+
+    .btn-secondary:hover {
+        background-color: #888;
+    }
+
+.home-info {
+    text-align: left;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #eee;
+}
+
+    .home-info h3 {
+        margin-bottom: 10px;
+    }
+
+    .home-info ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+        .home-info ul li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+            .home-info ul li:last-child {
+                border-bottom: none;
+            }
+
+            .home-info ul li:before {
+                content: "- ";
+                color: #333;
+                font-weight: bold;
+                margin-right: 5px;
+            }
+
+/* lgos page  */
+.logs-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.logs-header {
+    background: white;
+    padding: 15px 20px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+    .logs-header h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: normal;
+    }
+
+#user-info {
+    color: #666;
+    font-size: 13px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+    .btn-small:hover {
+        background-color: #f5f5f5;
+    }
+
+.logs-box {
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-top: none;
+    min-height: 400px;
+}
+
+.logs-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+    .logs-controls select {
+        padding: 6px;
+        border: 1px solid #ccc;
+        font-size: 13px;
+        background: white;
+    }
+
+/*  log list */
+.log-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.log-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+    .log-item:last-child {
+        border-bottom: none;
+    }
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.log-level {
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    background: white;
+}
+
+.log-level-1 {
+    border-color: #2196F3;
+    color: #2196F3;
+}
+.log-level-2 {
+    border-color: #4CAF50;
+    color: #4CAF50;
+}
+.log-level-3 {
+    border-color: #FF9800;
+    color: #FF9800;
+}
+.log-level-4 {
+    border-color: #F44336;
+    color: #F44336;
+}
+.log-level-5 {
+    border-color: #9C27B0;
+    color: #9C27B0;
+}
+
+.log-timestamp {
+    color: #999;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+}
+
+.log-message {
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.log-details {
+    color: #666;
+    font-size: 13px;
+    padding-left: 10px;
+    border-left: 2px solid #ddd;
+    margin-top: 6px;
+}
+
+/*  error message  */
+.message {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid;
+    border-radius: 3px;
+}
+
+.error-message {
+    background-color: #ffebee;
+    border-color: #f44336;
+    color: #c62828;
+}
